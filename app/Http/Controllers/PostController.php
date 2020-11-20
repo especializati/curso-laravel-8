@@ -74,4 +74,15 @@ class PostController extends Controller
                 ->route('posts.index')
                 ->with('message', 'Post atualizado com sucesso');
     }
+
+    public function search(Request $request)
+    {
+        $filters = $request->except('_token');
+
+        $posts = Post::where('title', 'LIKE', "%{$request->search}%")
+                        ->orWhere('content', 'LIKE', "%{$request->search}%")
+                        ->paginate();
+
+        return view('admin.posts.index', compact('posts', 'filters'));
+    }
 }
